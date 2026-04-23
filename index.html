@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLIN</title>
+
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#ffffff;
+    display:flex;
+    justify-content:center;
+    padding-bottom: 40px;
+}
+.fecha-linea{
+    display:flex;
+    align-items:center;
+}
+
+.fecha-linea .hora{
+    margin-left:0.5cm;
+}
+
+.container{
+    width:375px;
+    padding:20px;
+}
+
+.title{
+    text-align:center;
+    font-size:22px;
+    margin-bottom:10px;
+}
+
+.divider{
+    height:1px;
+    background:#eeeeee;
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    margin-bottom:15px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:16px;
+    box-sizing: border-box;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.primary{
+    background:#19b34c;
+    color:white;
+    margin-top:20px;
+}
+
+.secondary{
+    background:white;
+    border:2px solid #19b34c;
+    color:#19b34c;
+    margin-top:12px;
+}
+
+#constancia{ display:none; }
+
+.icon{
+    text-align:center;
+    margin-top:15px;
+}
+
+.icon img{
+    width:75px;
+}
+
+.success{
+    text-align:center;
+    color:#000;
+    font-size:18px;
+    margin-top:10px;
+}
+
+.monto{
+    text-align:center;
+    color:#19b34c;
+    font-weight:bold;
+    margin:10px 0 20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:6px;
+}
+
+.currency{ font-size:28px; }
+.amount{ font-size:48px; }
+
+.card{
+    background:#f2f2f2;
+    border-radius:15px;
+    padding:15px;
+    font-size:15px;
+}
+
+.label{
+    font-weight:bold;
+    margin-top:12px;
+}
+
+.badge{
+    display:inline-block;
+    background:#19b34c;
+    color:white;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:13px;
+    margin-top:5px;
+}
+
+/* FOOTER Y BOTONES */
+.footer{
+    margin-top:25px;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.footer strong{
+    font-size:13px;
+    margin-bottom: 5px;
+}
+
+.btn-exclusivo {
+    display: block;
+    background: #ffcc00;
+    color: #333;
+    text-decoration: none;
+    font-weight: 900;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: 0.2s;
+    margin-bottom: 10px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.btn-footer{
+    padding: 12px 5px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s;
+}
+
+.btn-footer:hover, .btn-exclusivo:hover { transform: scale(1.02); }
+
+.btn-wsp{ background:#25D366; }
+.btn-azul{ background:#2196F3; }
+.btn-grupo{ background:#128C7E; }
+.btn-insta{ background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af,#515bd4); }
+
+.popup{
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.4);
+    justify-content:center;
+    align-items:center;
+}
+
+.popup-content{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    width:80%;
+    max-width:300px;
+    text-align:center;
+    position:relative;
+}
+
+.close{
+    position:absolute;
+    top:10px;
+    right:15px;
+    font-size:20px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="formulario">
+    <div class="title">Enviar dinero - Plin</div>
+    <div class="divider"></div>
+
+    <input type="text" id="nombre" placeholder="Nombre del destinatario">
+    <input type="tel" id="numero" placeholder="Número de celular">
+    <input type="number" id="montoInput" placeholder="Monto a enviar">
+
+    <button class="primary" onclick="simular()">ENVIAR</button>
+
+    <div class="footer" style="margin-top: 30px;">
+        <a href="https://streamingpe26.github.io/streamingpe/" class="btn-exclusivo" target="_blank">⭐ EXCLUSIVO AQUÍ ⭐</a>
+    </div>
+</div>
+
+<div id="constancia">
+
+    <div class="title">Constancia</div>
+    <div class="divider"></div>
+
+    <div class="icon">
+        <img src="https://images.seeklogo.com/logo-png/38/1/plin-logo-png_seeklogo-386806.png">
+    </div>
+
+    <div class="success">¡Pago exitoso!</div>
+
+    <div class="monto">
+        <span class="currency">S/</span>
+        <span class="amount" id="monto"></span>
+    </div>
+
+    <div class="card">
+        <div class="label">Enviado a:</div>
+        <div id="nombreRes"></div>
+        <div id="numeroRes"></div>
+
+        <div class="label">Destino:</div>
+        <div>Yape</div>
+
+        <div class="label">Comisión:</div>
+        <div class="badge">GRATIS</div>
+
+        <div class="label">Fecha y hora:</div>
+        <div id="fecha" class="fecha-linea"></div>
+
+        <div class="label">Código de operación:</div>
+        <div id="codigo"></div>
+    </div>
+
+    <button class="primary" onclick="mostrarPopup()">Enviar constancia</button>
+    <button class="secondary" onclick="volver()">Volver a Plin</button>
+
+    <div class="footer">
+        <strong>DESARROLLADO POR EDER STEVEN VENTAS FF</strong>
+
+        <a href="https://streamingpe26.github.io/streamingpe/" class="btn-exclusivo" target="_blank">⭐ EXCLUSIVO AQUÍ ⭐</a>
+
+        <div class="footer-grid">
+            <a class="btn-footer btn-wsp" href="https://wa.me/51992867258" target="_blank">CONTACTO</a>
+            <a class="btn-footer btn-azul" 
+               href="https://wa.me/51992867258?text=Hola,%20quiero%20comprar%20plin%20fake%20vengo%20de%20tu%20pagina%20y%20el%20precio%20es%20s/%205%20soles%20y%20deseo%20el%20metodo%20de%20pago" 
+               target="_blank">PLIN FAKE</a>
+            <a class="btn-footer btn-grupo" href="https://chat.whatsapp.com/E6UZhymVHGtDBLIr1s9Ekg" target="_blank">GRUPO WSP</a>
+            <a class="btn-footer btn-insta" href="https://instagram.com/stevenv.ff" target="_blank">INSTAGRAM</a>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <span class="close" onclick="cerrarPopup()">×</span>
+        <p>
+            Solo sácale captura y recorta la imagen,
+            luego envíaselo a tu Victima.<br><br>
+            Gracias por usar nuestros servicios.
+        </p>
+    </div>
+</div>
+
+<script>
+function formatearNumero(numero){
+    return numero.replace(/(\d{3})(?=\d)/g, "$1 ");
+}
+
+function simular(){
+    let nombre = document.getElementById("nombre").value;
+    let numero = document.getElementById("numero").value;
+    let monto = document.getElementById("montoInput").value;
+
+    if(nombre===""||numero===""||monto===""){
+        alert("Complete todos los campos");
+        return;
+    }
+
+    let montoFormateado = parseFloat(monto).toFixed(2);
+    let numeroFormateado = formatearNumero(numero);
+    let ahora = new Date();
+    let meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+    let dia = ahora.getDate();
+    let mesTexto = meses[ahora.getMonth()];
+    let año = ahora.getFullYear();
+    let horas = ahora.getHours();
+    let minutos = String(ahora.getMinutes()).padStart(2,'0');
+    let ampm = horas >= 12 ? "PM" : "AM";
+    horas = horas % 12;
+    horas = horas ? horas : 12;
+
+    let codigo = Math.floor(Math.random()*90000000)+10000000;
+
+    document.getElementById("formulario").style.display="none";
+    document.getElementById("constancia").style.display="block";
+
+    document.getElementById("monto").innerHTML = montoFormateado;
+    document.getElementById("nombreRes").innerHTML = nombre;
+    document.getElementById("numeroRes").innerHTML = numeroFormateado;
+    document.getElementById("fecha").innerHTML =
+    "<span>" + dia + " " + mesTexto + " " + año + "</span>" +
+    "<span class='hora'>" + horas + ":" + minutos + " " + ampm + "</span>";
+
+    document.getElementById("codigo").innerHTML = codigo;
+}
+
+function volver(){
+    document.getElementById("formulario").style.display="block";
+    document.getElementById("constancia").style.display="none";
+}
+
+function mostrarPopup(){
+    document.getElementById("popup").style.display="flex";
+}
+
+function cerrarPopup(){
+    document.getElementById("popup").style.display="none";
+}
+</script>
+
+</body>
+</html>
